@@ -11,7 +11,7 @@ from random import randrange
 random_number = randrange(1,101)
 player_number=0
 counter=0
-print(random_number)
+#print(random_number)
 def funkcja(random_number,player_number,counter):
     player_number=int(input('Podaj liczbe z przedziału od 1 do 100: '))
     while player_number<=100 and player_number>=1:
