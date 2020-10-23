@@ -10,38 +10,159 @@ from random import randrange
 from art import *
 from os import *
 from time import sleep
+from progress.bar import Bar
+import webbrowser
+import pickle
+import shelve
+
 
 def clear(): 
     if name == 'nt': 
         _ = system('cls') 
 
+def loading_en():
+    bar = Bar('Loading', fill='#', suffix='%(percent)d%%')
+    for i in range(100):
+        sleep(0.01)
+        bar.next()
+    bar.finish()
+
+def loading_pl():
+    bar = Bar('Ładowanie', fill='#', suffix='%(percent)d%%')
+    for i in range(100):
+        sleep(0.01)
+        bar.next()
+    bar.finish()
+
 def menu_pl():
-    tprint("Python Game")
+    clear()
+    tprint("Gra Python")
     print("[1] Nowa Gra")
     print("[2] Ranking")
-    print("[4] Autorzy")
-    print("[5] Easter Egg")
-    print("[6] Wyjście")
+    print("[3] Autorzy")
+    print("[4] Easter Egg")
+    print("[5] Wyjście")
+    sel_menu=input("Wybrane: ")
+    sel_menu=int(sel_menu)
+    if(sel_menu==1):
+        clear()
+        maingame_pl()
+    elif(sel_menu==2):
+        clear()
+        ranking()
+    elif(sel_menu==3):
+        credit_pl()
+    elif(sel_menu==4):
+        clear()
+        egg=input("Napisz coś: ")
+        egg=str(egg)
+        tprint(egg,"rand")
+        print("Proszę czekać...")
+        sleep(4)
+        menu_pl()
+    elif(sel_menu==5):
+        quit
+    else:
+        clear()
+        print("Zły numer! \nProszę wybrać z przedziału <1,5>")
+        menu_pl()
 
 def menu_en():
+    clear()
     tprint("Python Game")
     print("[1] New Game")
     print("[2] Ranking")
-    print("[4] Credits")
-    print("[5] Easter Egg")
-    print("[6] Quit")
+    print("[3] Credits")
+    print("[4] Easter Egg")
+    print("[5] Quit")
     sel_menu=input("Selected: ")
     sel_menu=int(sel_menu)
     if(sel_menu==1):
         clear()
-        maingame()
+        maingame_en()
     elif(sel_menu==2):
-        print("in progress...")
+        clear()
+        ranking()
     elif(sel_menu==3):
-        
+        credit_en()
+    elif(sel_menu==4):
+        clear()
+        egg=input("Write something: ")
+        egg=str(egg)
+        tprint(egg,"rand")
+        print("Please wait...")
+        sleep(4)
+        menu_en()
+    elif(sel_menu==5):
+        quit
+    else:
+        clear()
+        print("Wrong number! \nPlease select <1,5>")
+        menu_en()
 
+def ranking():
+    pass
+
+def credit_en():
+        clear()
+        print("======================================================")
+        print("Project authors: \n")
+        sleep(1)
+        print("Daniel Piekarczyk")
+        print("*")
+        sleep(1)
+        print("Jakub Skupień")
+        print("*")
+        sleep(1)
+        print("Adam Ostrowski")
+        print("*")
+        print("======================================================")
+        print("[1] Link")
+        print("[2] Quit")
+        sel_credits=input("Selected: ")
+        sel_credits=int(sel_credits)
+
+        if sel_credits==1:
+            webbrowser.open("https://github.com/t33lx/wdi/tree/master/Projekt%201")
+            menu_en()
+        elif sel_credits==2:
+            menu_en()
+        else:
+            clear()
+            print("Wrong number! \nPlease select <1,2>")
+            credit_en()
+
+def credit_pl():
+        clear()
+        print("======================================================")
+        print("Autorzy projektu: \n")
+        sleep(1)
+        print("Daniel Piekarczyk")
+        print("*")
+        sleep(1)
+        print("Jakub Skupień")
+        print("*")
+        sleep(1)
+        print("Adam Ostrowski")
+        print("*")
+        print("======================================================")
+        print("[1] Link")
+        print("[2] Wyjście")
+        sel_credits=input("Wybrane: ")
+        sel_credits=int(sel_credits)
+
+        if sel_credits==1:
+            webbrowser.open("https://github.com/t33lx/wdi/tree/master/Projekt%201")
+            menu_pl()
+        elif sel_credits==2:
+            menu_pl()
+        else:
+            clear()
+            print("Zły numer! \nProszę wybrać z przedziału <1,2>")
+            credit_pl()
 
 def language():
+    clear()
     print("Language: ")
     print("[1] English")
     print("[2] Polski")
@@ -55,33 +176,110 @@ def language():
         menu_pl()
     else:
         clear()
-        print("Wrong number! \nPlease select [1] or [2]")
         language()
 
-random_number = randrange(1,101)
-player_number=0
-counter=0
+def menu_game_pl():
+    print("======================================================")
+    print("[1] Nowa Gra")
+    print("[2] Zapisz wynik")
+    print("[3] Ranking")
+    print("[4] Wyjście")
+    sel_game=input("Wybrane: ")
+    sel_game=int(sel_game)
+    if sel_game==1:
+        maingame_pl()
+    elif sel_game==2:
+        pass
+        
+    elif sel_game==3:
+        ranking()
+    elif sel_game==4:
+        menu_pl()
+    else:
+        clear()
+        print("Zły numer! \nProszę wybrać z przedziału <1,4>")
+        menu_game_pl()
 
-#print(random_number)
-def maingame(random_number,player_number,counter):
+def menu_game_en():
+    print("======================================================")
+    print("[1] New Game")
+    print("[2] Save Score")
+    print("[3] Ranking")
+    print("[4] Quit")
+    sel_game=input("Selected: ")
+    sel_game=int(sel_game)
+    if sel_game==1:
+        maingame_en()
+    elif sel_game==2:
+        pass
+    elif sel_game==3:
+        ranking()
+    elif sel_game==4:
+        menu_en()
+    else:
+        clear()
+        print("Wrong number! \nPlease select <1,4>")
+        menu_game_en()
+
+
+def maingame_pl():
+    loading_pl()
+    nick=input("Podaj nick: ")
+    random_number = randrange(1,101)
+    player_number=0
+    counter=0
+
+    print(random_number)
     player_number=int(input('Podaj liczbe z przedziału od 1 do 100: '))
-    while player_number<=100 and player_number>=1:
-        if random_number > player_number:
-            print('za mała liczba')
+    while player_number!=random_number:
+        if random_number > player_number and player_number>=0:
+            print('Za mała liczba')
             counter+=1
             player_number=int(input('Podaj liczbe z przedziału od 1 do 100: '))
-        elif random_number < player_number:
-            print('za duża liczba')
+        elif random_number < player_number and player_number<=100:
+            print('Za duża liczba')
             counter+=1
             player_number=int(input('Podaj liczbe z przedziału od 1 do 100: '))
         else:
+            print('Podałeś liczbę, która nie jest z przedziału <1,100>!')
             counter+=1
-            print('brawo, mój przyjacielu, zgadłeś za ' + str(counter) + " razem!")
-            break
+            player_number=int(input('Podaj liczbe z przedziału od 1 do 100: '))
+                
     else:
-        print('Podałeś liczbę, która nie jest z przedziału <1,100>!')
+        clear()
         counter+=1
-        maingame(random_number,player_number,counter)
+        print('Brawo '+ nick +', zgadłeś za ' + str(counter) + " razem!")
+        menu_game_pl()
+
+def maingame_en():
+    loading_en()
+    nick=input("Enter the nickname: ")
+    random_number = randrange(1,101)
+    player_number=0
+    counter=0
+
+    print(random_number)
+    player_number=int(input('Enter a number from 1 to 100: '))
+    while player_number!=random_number:
+        if random_number > player_number and player_number>=0:
+            print('The number is too small')
+            counter+=1
+            player_number=int(input('Enter a number from 1 to 100: '))
+        elif random_number < player_number and player_number<=100:
+            print('The number is too large')
+            counter+=1
+            player_number=int(input('Enter a number from 1 to 100: '))
+        else:
+            print('You entered a number that is not in the range of <1,100>!')
+            counter+=1
+            player_number=int(input('Enter a number from 1 to 100: '))
+                
+    else:
+        clear()
+        counter+=1
+        print('Congrats '+ nick +', You guessed a number in ' + str(counter) + ' tries!')
+        menu_game_en()        
+
+
 
 language()
-maingame(random_number, player_number, counter)
