@@ -6,19 +6,18 @@ liczbę mniejszą niż liczba wylosowana, to program wypisuje tekst "za mała li
 poda większą liczbę, to wypisuje tekst "za duża liczba". Jeśli użytkownik poda wylosowaną
 liczbę, to wypisuje tekst „brawo, mój przyjacielu”."""
 
-from random import randrange
-from art import *
-from os import *
-from time import sleep
-from progress.bar import Bar
-import webbrowser
 import pickle
-import shelve
+import webbrowser
+from bdb import bar
+from random import randrange
+from time import sleep
+
+from art import *
+from progress.bar import Bar
 
 
 def clear(): 
-    if name == 'nt': 
-        _ = system('cls') 
+    print("\033[H\033[J") 
 
 def loading_en():
     bar = Bar('Loading', fill='#', suffix='%(percent)d%%')
@@ -49,7 +48,7 @@ def menu_pl():
         maingame_pl()
     elif(sel_menu==2):
         clear()
-        ranking()
+        leaderboard_pl()
     elif(sel_menu==3):
         credit_pl()
     elif(sel_menu==4):
@@ -71,7 +70,7 @@ def menu_en():
     clear()
     tprint("Python Game")
     print("[1] New Game")
-    print("[2] Ranking")
+    print("[2] Leaderboards")
     print("[3] Credits")
     print("[4] Easter Egg")
     print("[5] Quit")
@@ -82,7 +81,7 @@ def menu_en():
         maingame_en()
     elif(sel_menu==2):
         clear()
-        ranking()
+        leaderboard_en()
     elif(sel_menu==3):
         credit_en()
     elif(sel_menu==4):
@@ -100,8 +99,31 @@ def menu_en():
         print("Wrong number! \nPlease select <1,5>")
         menu_en()
 
-def ranking():
-    pass
+def leaderboard_en():
+    clear()
+    with open('rank.pickle', 'rb') as f:
+        rank = pickle.load(f)
+        tprint("Leaderboard:")
+        print(rank)
+        x=input("Press [1] to quit: ")
+        x=int(x)
+        if x==1:
+            menu_en()
+        else:
+            leaderboard_en()
+
+def leaderboard_pl():
+    clear()
+    with open('rank.pickle', 'rb') as f:
+        rank = pickle.load(f)
+        tprint("Ranking:")
+        print(rank)
+        x=input("Naciśnij [1] aby wyjść: ")
+        x=int(x)
+        if x==1:
+            menu_pl()
+        else:
+            leaderboard_pl()
 
 def credit_en():
         clear()
@@ -178,7 +200,7 @@ def language():
         clear()
         language()
 
-def menu_game_pl():
+def menu_game_pl(nick, counter):
     print("======================================================")
     print("[1] Nowa Gra")
     print("[2] Zapisz wynik")
@@ -189,37 +211,50 @@ def menu_game_pl():
     if sel_game==1:
         maingame_pl()
     elif sel_game==2:
-        pass
-        
+        bestscores={}
+        bestscores.update({nick : counter})
+        with open('rank.pickle', 'wb') as f:
+            pickle.dump(bestscores, f, pickle.HIGHEST_PROTOCOL)
+        print("Zapisywanie...")
+        sleep(2)
+        clear()
+        menu_game_pl(nick, counter)
     elif sel_game==3:
-        ranking()
+        leaderboard_pl()
     elif sel_game==4:
         menu_pl()
     else:
         clear()
         print("Zły numer! \nProszę wybrać z przedziału <1,4>")
-        menu_game_pl()
+        menu_game_pl(nick, counter)
 
-def menu_game_en():
+def menu_game_en(nick, counter):
     print("======================================================")
     print("[1] New Game")
     print("[2] Save Score")
-    print("[3] Ranking")
+    print("[3] Leaderboard")
     print("[4] Quit")
     sel_game=input("Selected: ")
     sel_game=int(sel_game)
     if sel_game==1:
         maingame_en()
     elif sel_game==2:
-        pass
+        bestscores={}
+        bestscores.update({nick : counter})
+        with open('rank.pickle', 'wb') as f:
+            pickle.dump(bestscores, f, pickle.HIGHEST_PROTOCOL)
+        print("Saving...")
+        sleep(2)
+        clear()
+        menu_game_en(nick, counter)
     elif sel_game==3:
-        ranking()
+        leaderboard_en()
     elif sel_game==4:
         menu_en()
     else:
         clear()
         print("Wrong number! \nPlease select <1,4>")
-        menu_game_en()
+        menu_game_en(nick, counter)
 
 
 def maingame_pl():
@@ -249,7 +284,7 @@ def maingame_pl():
         clear()
         counter+=1
         print('Brawo '+ nick +', zgadłeś za ' + str(counter) + " razem!")
-        menu_game_pl()
+        menu_game_pl(nick, counter)
 
 def maingame_en():
     loading_en()
@@ -278,7 +313,7 @@ def maingame_en():
         clear()
         counter+=1
         print('Congrats '+ nick +', You guessed a number in ' + str(counter) + ' tries!')
-        menu_game_en()        
+        menu_game_en(nick, counter)        
 
 
 
