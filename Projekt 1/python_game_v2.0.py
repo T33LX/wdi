@@ -11,15 +11,16 @@ import webbrowser
 from bdb import bar
 from random import randrange
 from time import sleep
-
+from os import system
 from art import *
 from progress.bar import Bar
 
 
 def clear(): 
-    print("\033[H\033[J") 
+    system("cls")
 
 def loading_en():
+    tprint("PYGAME")
     bar = Bar('Loading', fill='#', suffix='%(percent)d%%')
     for i in range(100):
         sleep(0.01)
@@ -27,6 +28,7 @@ def loading_en():
     bar.finish()
 
 def loading_pl():
+    tprint("PYGAME")
     bar = Bar('Ładowanie', fill='#', suffix='%(percent)d%%')
     for i in range(100):
         sleep(0.01)
@@ -264,7 +266,7 @@ def maingame_pl():
     player_number=0
     counter=0
 
-    print(random_number)
+    #print(random_number)
     player_number=int(input('Podaj liczbe z przedziału od 1 do 100: '))
     while player_number!=random_number:
         if random_number > player_number and player_number>=0:
@@ -293,7 +295,7 @@ def maingame_en():
     player_number=0
     counter=0
 
-    print(random_number)
+    #print(random_number)
     player_number=int(input('Enter a number from 1 to 100: '))
     while player_number!=random_number:
         if random_number > player_number and player_number>=0:
