@@ -247,10 +247,7 @@ def menu_game_en(nick, counter):
     if sel_game==1:
         maingame_en()
     elif sel_game==2:
-        bestscores={
-            ['Nick: '],
-            ['Score: ']
-        }
+        bestscores={}
         with open('ranks.txt') as f:
             data=json.load(f)
         bestscores.update(data)
