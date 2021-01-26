@@ -1,0 +1,50 @@
+const int trigPin = 9;
+const int echoPin = 10;
+const int ledPin = 13;
+
+long z;
+int dystans;
+int dystans2;
+
+
+void setup() {
+pinMode(trigPin, OUTPUT);
+pinMode(echoPin, INPUT);
+pinMode(ledPin, OUTPUT);
+Serial.begin(9600); 
+}
+
+void loop() {
+digitalWrite(trigPin, LOW);
+delayMicroseconds(2);
+
+digitalWrite(trigPin, HIGH);
+delayMicroseconds(10);
+digitalWrite(trigPin, LOW);
+
+z = pulseIn(echoPin, HIGH);
+
+dystans = z*0.034/2;   //cm
+dystans2 = dystans;
+
+if (dystans2 <= 10)
+{
+  digitalWrite(ledPin, HIGH);
+  delay(100);
+  digitalWrite(ledPin, LOW);
+}
+
+if (dystans2 <= 5)
+{
+  digitalWrite(ledPin, HIGH);
+}
+
+else{
+  digitalWrite(ledPin, LOW);
+}
+
+// Wypisywanie odleglosci na monitor
+Serial.print("Odleglosc: ");
+Serial.println(dystans); 
+delay(400);
+}
